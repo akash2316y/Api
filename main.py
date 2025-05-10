@@ -15,7 +15,7 @@ def home():
     </html>
     '''
 
-@app.route('/myapi')
+@app.route('/api')
 def my_api():
     url = request.args.get('url')
     if not url:
