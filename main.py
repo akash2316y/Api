@@ -15,13 +15,13 @@ def home():
     </html>
     '''
 
-@app.route('/myapi')
+@app.route('/api')
 def my_api():
     url = request.args.get('url')
     if not url:
         return jsonify({"error": "Missing 'url' parameter"}), 400
 
-    api_url = f"https://terabox.web.id/url?url={url}&token=88c98289-92ae-4ebf-9751-80b77717ad47_6987158459"
+    api_url = f"https://terabox.web.id/url?url={url}&token=044f6b7b-1083-4dc8-8480-a3ccf7989174_6987158459"
     
     try:
         r = requests.get(api_url)
