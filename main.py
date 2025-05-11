@@ -31,7 +31,7 @@ def my_api():
     if not url:
         return jsonify({"error": "Missing 'url' parameter"}), 400
 
-    api_url = f"https://terabox.web.id/url?url={url}&token=88c98289-92ae-4ebf-9751-80b77717ad47_6987158459"
+    api_url = f"https://terabox.web.id/url?url={url}&token=71dc06a7-9170-4cc5-a8f0-e26ea8618fde_6987158459"
 
     try:
         r = requests.get(api_url)
