@@ -4,7 +4,7 @@ import urllib.parse
 
 app = Flask(__name__)
 
-BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app/"  # <-- Replace with your Koyeb URL
+BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app/"  # Replace with your actual deployed Koyeb URL
 
 def format_size(size):
     for unit in ['Bytes', 'KB', 'MB', 'GB', 'TB']:
@@ -43,6 +43,11 @@ def my_api():
                     encoded = urllib.parse.quote_plus(item[key])
                     item[key] = f"{BASE_URL}/redirect?target={encoded}"
 
+            if "direct_link" in item:
+                # Add a streaming URL too
+                encoded_stream = urllib.parse.quote_plus(item["direct_link"])
+                item["stream_url"] = f"{BASE_URL}/redirect?target={encoded_stream}&video=true"
+
             if "size" in item:
                 item["size"] = format_size(item["size"])
 
@@ -54,9 +59,47 @@ def my_api():
 @app.route('/redirect')
 def redirector():
     target = request.args.get('target')
+    video = request.args.get('video')
+
     if not target:
         return "Missing target", 400
-    return redirect(target)
+
+    decoded_target = urllib.parse.unquote_plus(target)
+
+    if video == 'true':
+        return f'''
+        <html>
+            <head>
+                <title>Stream Video</title>
+                <style>
+                    body {{
+                        background-color: #000;
+                        color: #fff;
+                        text-align: center;
+                        padding: 20px;
+                        font-family: sans-serif;
+                    }}
+                    video {{
+                        width: 90%;
+                        height: auto;
+                        max-width: 800px;
+                        margin-top: 20px;
+                        border: 2px solid #fff;
+                        border-radius: 10px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <h1>Streaming from Akash API</h1>
+                <video controls autoplay>
+                    <source src="{decoded_target}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </body>
+        </html>
+        '''
+    else:
+        return redirect(decoded_target)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
