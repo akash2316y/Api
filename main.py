@@ -4,7 +4,7 @@ import urllib.parse
 
 app = Flask(__name__)
 
-BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app"  # Replace with your actual deployed Koyeb URL
+BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app"  # Replace with your actual Koyeb domain
 
 def format_size(size):
     for unit in ['Bytes', 'KB', 'MB', 'GB', 'TB']:
@@ -49,20 +49,24 @@ def my_api():
                 item["stream_url"] = f"{BASE_URL}/url?url={encoded_stream}&video=true"
 
             if "size" in item:
-                item["size"] = format_size(item["size"])
+                try:
+                    size_int = int(item["size"])
+                    item["size"] = format_size(size_int)
+                except:
+                    pass  # leave as is if it's already formatted
 
         return jsonify(data)
 
     except Exception as e:
         return jsonify({"error": "Failed to fetch from source API", "details": str(e)}), 500
 
-@app.route('/redirect')
-def redirector():
-    target = request.args.get('target')
+@app.route('/url')
+def url_handler():
+    target = request.args.get('url')
     video = request.args.get('video')
 
     if not target:
-        return "Missing target", 400
+        return "Missing URL", 400
 
     decoded_target = urllib.parse.unquote_plus(target)
 
@@ -84,7 +88,7 @@ def redirector():
                         width: 80%;
                         max-width: 960px;
                         margin: 0 auto;
-                        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+                        padding-top: 56.25%;
                     }}
                     .video-container video {{
                         position: absolute;
@@ -102,7 +106,7 @@ def redirector():
                 <h1>Terabox Video Stream</h1>
                 <div class="video-container">
                     <video controls autoplay>
-                        <source src="{decoded_target}" type="video/mp4">
+                        <source src="{decoded_target}" type="video/x-matroska">
                         Your browser does not support the video tag.
                     </video>
                 </div>
