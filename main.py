@@ -4,7 +4,7 @@ import urllib.parse
 
 app = Flask(__name__)
 
-BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app/"  # Replace with your actual deployed Koyeb URL
+BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app"  # Replace with your actual deployed Koyeb URL
 
 def format_size(size):
     for unit in ['Bytes', 'KB', 'MB', 'GB', 'TB']:
