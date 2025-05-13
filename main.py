@@ -4,8 +4,8 @@ import urllib.parse
 
 app = Flask(__name__)
 
-BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app/"  # <-- Replace with your Koyeb URL
-token = "184db604-9f21-4591-b510-5bdddec4a90c_6987158459"
+BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app"  # <-- Replace with your Koyeb URL
+token = "184db604-9f21-4591-b510-5bdddec4a90c_6987158459" #terabox api here
 
 def format_size(size):
     for unit in ['Bytes', 'KB', 'MB', 'GB', 'TB']:
