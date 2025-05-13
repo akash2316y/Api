@@ -4,7 +4,8 @@ import urllib.parse
 
 app = Flask(__name__)
 
-BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app"  # Replace with your actual Koyeb domain
+BASE_URL = "https://unpleasant-leena-noobx-1206f7ad.koyeb.app/"  # <-- Replace with your Koyeb URL
+token = "184db604-9f21-4591-b510-5bdddec4a90c_6987158459"
 
 def format_size(size):
     for unit in ['Bytes', 'KB', 'MB', 'GB', 'TB']:
@@ -31,7 +32,7 @@ def my_api():
     if not url:
         return jsonify({"error": "Missing 'url' parameter"}), 400
 
-    api_url = f"https://terabox.web.id/url?url={url}&token=184db604-9f21-4591-b510-5bdddec4a90c_6987158459"
+    api_url = f"https://terabox.web.id/url?url={url}&token={token}"
 
     try:
         r = requests.get(api_url)
@@ -41,80 +42,22 @@ def my_api():
             for key in ['direct_link', 'link', 'thumbnail']:
                 if key in item:
                     encoded = urllib.parse.quote_plus(item[key])
-                    item[key] = f"{BASE_URL}/url?url={encoded}"
-
-            if "direct_link" in item:
-                # Add a streaming URL too
-                encoded_stream = urllib.parse.quote_plus(item["direct_link"])
-                item["stream_url"] = f"{BASE_URL}/url?url={encoded_stream}&video=true"
+                    item[key] = f"{BASE_URL}/redirect?target={encoded}"
 
             if "size" in item:
-                try:
-                    size_int = int(item["size"])
-                    item["size"] = format_size(size_int)
-                except:
-                    pass  # leave as is if it's already formatted
+                item["size"] = format_size(item["size"])
 
         return jsonify(data)
 
     except Exception as e:
         return jsonify({"error": "Failed to fetch from source API", "details": str(e)}), 500
 
-@app.route('/url')
-def url_handler():
-    target = request.args.get('url')
-    video = request.args.get('video')
-
+@app.route('/redirect')
+def redirector():
+    target = request.args.get('target')
     if not target:
-        return "Missing URL", 400
-
-    decoded_target = urllib.parse.unquote_plus(target)
-
-    if video == 'true':
-        return f'''
-        <html>
-            <head>
-                <title>Stream Video</title>
-                <style>
-                    body {{
-                        background-color: #000;
-                        color: #fff;
-                        text-align: center;
-                        font-family: sans-serif;
-                        padding: 30px;
-                    }}
-                    .video-container {{
-                        position: relative;
-                        width: 80%;
-                        max-width: 960px;
-                        margin: 0 auto;
-                        padding-top: 56.25%;
-                    }}
-                    .video-container video {{
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        border: 3px solid #fff;
-                        border-radius: 8px;
-                        background: #000;
-                    }}
-                </style>
-            </head>
-            <body>
-                <h1>Terabox Video Stream</h1>
-                <div class="video-container">
-                    <video controls autoplay>
-                        <source src="{decoded_target}" type="video/x-matroska">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            </body>
-        </html>
-        '''
-    else:
-        return redirect(decoded_target)
+        return "Missing target", 400
+    return redirect(target)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
