@@ -76,25 +76,36 @@ def redirector():
                         background-color: #000;
                         color: #fff;
                         text-align: center;
-                        padding: 20px;
                         font-family: sans-serif;
+                        padding: 30px;
                     }}
-                    video {{
-                        width: 90%;
-                        height: auto;
-                        max-width: 800px;
-                        margin-top: 20px;
-                        border: 2px solid #fff;
-                        border-radius: 10px;
+                    .video-container {{
+                        position: relative;
+                        width: 80%;
+                        max-width: 960px;
+                        margin: 0 auto;
+                        padding-top: 56.25%; /* 16:9 Aspect Ratio */
+                    }}
+                    .video-container video {{
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        border: 3px solid #fff;
+                        border-radius: 8px;
+                        background: #000;
                     }}
                 </style>
             </head>
             <body>
-                <h1>Streaming from Akash API</h1>
-                <video controls autoplay>
-                    <source src="{decoded_target}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <h1>Akash Video Stream</h1>
+                <div class="video-container">
+                    <video controls autoplay>
+                        <source src="{decoded_target}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
             </body>
         </html>
         '''
