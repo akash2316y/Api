@@ -41,12 +41,12 @@ def my_api():
             for key in ['direct_link', 'link', 'thumbnail']:
                 if key in item:
                     encoded = urllib.parse.quote_plus(item[key])
-                    item[key] = f"{BASE_URL}/redirect?target={encoded}"
+                    item[key] = f"{BASE_URL}/url?url={encoded}"
 
             if "direct_link" in item:
                 # Add a streaming URL too
                 encoded_stream = urllib.parse.quote_plus(item["direct_link"])
-                item["stream_url"] = f"{BASE_URL}/redirect?target={encoded_stream}&video=true"
+                item["stream_url"] = f"{BASE_URL}/url?url={encoded_stream}&video=true"
 
             if "size" in item:
                 item["size"] = format_size(item["size"])
@@ -99,7 +99,7 @@ def redirector():
                 </style>
             </head>
             <body>
-                <h1>Akash Video Stream</h1>
+                <h1>Terabox Video Stream</h1>
                 <div class="video-container">
                     <video controls autoplay>
                         <source src="{decoded_target}" type="video/mp4">
