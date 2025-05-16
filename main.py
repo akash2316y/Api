@@ -3,7 +3,7 @@ import requests
 
 app = Flask(__name__)
 
-token = "184db604-9f21-4591-b510-5bdddec4a90c_6987158459"
+token = "akash_8110231942"
 
 @app.route('/')
 def home():
